@@ -81,53 +81,53 @@
             renderElements: function () {
                 var languages = this.state.config.transcriptLanguages;
 
-                var langTemplate = [
-                    '<div class="grouped-controls">',
-                        '<button class="control toggle-captions" aria-disabled="false">',
-                            '<span class="icon-fallback-img">',
-                                '<span class="icon fa fa-cc" aria-hidden="true"></span>',
-                                '<span class="sr control-text"></span>',
-                            '</span>',
-                        '</button>',
-                        '<button class="control toggle-transcript" aria-disabled="false">',
-                            '<span class="icon-fallback-img">',
-                                '<span class="icon fa fa-quote-left" aria-hidden="true"></span>',
-                                '<span class="sr control-text"></span>',
-                            '</span>',
-                        '</button>',
-                        '<div class="lang menu-container" role="application">',
-                            '<p class="sr instructions" id="lang-instructions"></p>',
-                            '<button class="control language-menu" aria-disabled="false"',
-                                'aria-describedby="lang-instructions" ',
-                                'title="',
+                var langHtml = HtmlUtils.joinHtml(
+                    HtmlUtils.HTML('<div class="grouped-controls">'),
+                        HtmlUtils.HTML('<button class="control toggle-captions" aria-disabled="false">'),
+                            HtmlUtils.HTML('<span class="icon-fallback-img">'),
+                                HtmlUtils.HTML('<span class="icon fa fa-cc" aria-hidden="true"></span>'),
+                                HtmlUtils.HTML('<span class="sr control-text"></span>'),
+                            HtmlUtils.HTML('</span>'),
+                        HtmlUtils.HTML('</button>'),
+                        HtmlUtils.HTML('<button class="control toggle-transcript" aria-disabled="false">'),
+                            HtmlUtils.HTML('<span class="icon-fallback-img">'),
+                                HtmlUtils.HTML('<span class="icon fa fa-quote-left" aria-hidden="true"></span>'),
+                                HtmlUtils.HTML('<span class="sr control-text"></span>'),
+                            HtmlUtils.HTML('</span>'),
+                        HtmlUtils.HTML('</button>'),
+                        HtmlUtils.HTML('<div class="lang menu-container" role="application">'),
+                            HtmlUtils.HTML('<p class="sr instructions" id="lang-instructions"></p>'),
+                            HtmlUtils.HTML('<button class="control language-menu" aria-disabled="false"'),
+                                HtmlUtils.HTML('aria-describedby="lang-instructions" '),
+                                HtmlUtils.HTML('title="'),
                                     gettext('Open language menu'),
-                                '">',
-                                '<span class="icon-fallback-img">',
-                                    '<span class="icon fa fa-caret-left" aria-hidden="true"></span>',
-                                    '<span class="sr control-text"></span>',
-                                '</span>',
-                            '</button>',
-                        '</div>',
-                    '</div>'
-                ].join('');
+                                HtmlUtils.HTML('">'),
+                                HtmlUtils.HTML('<span class="icon-fallback-img">'),
+                                    HtmlUtils.HTML('<span class="icon fa fa-caret-left" aria-hidden="true"></span>'),
+                                    HtmlUtils.HTML('<span class="sr control-text"></span>'),
+                                HtmlUtils.HTML('</span>'),
+                            HtmlUtils.HTML('</button>'),
+                        HtmlUtils.HTML('</div>'),
+                    HtmlUtils.HTML('</div>)')
+                );
 
-                var template = HtmlUtils.interpolateHtml(
-                        HtmlUtils.HTML([
-                            '<div class="subtitles" role="region" id="transcript-{courseId}">',
-                                '<h3 id="transcript-label-{courseId}" class="transcript-title sr"></h3>',
-                                '<ol id="transcript-captions" class="subtitles-menu" lang="{courseLang}"></ol>',
-                            '</div>'
-                        ].join('')),
-                        {
-                            courseId: this.state.id,
-                            courseLang: this.state.lang
-                        }
-                    ).toString();
+                var subtitlesHtml = HtmlUtils.interpolateHtml(
+                    HtmlUtils.joinHtml(
+                        HtmlUtils.HTML('<div class="subtitles" role="region" id="transcript-{courseId}">'),
+                        HtmlUtils.HTML('<h3 id="transcript-label-{courseId}" class="transcript-title sr"></h3>'),
+                        HtmlUtils.HTML('<ol id="transcript-captions" class="subtitles-menu" lang="{courseLang}"></ol>'),
+                        HtmlUtils.HTML('</div>')
+                    ),
+                    {
+                        courseId: this.state.id,
+                        courseLang: this.state.lang
+                    }
+                );
 
                 this.loaded = false;
-                this.subtitlesEl = $(template);
+                this.subtitlesEl = $(HtmlUtils.ensureHtml(subtitlesHtml).toString());
                 this.subtitlesMenuEl = this.subtitlesEl.find('.subtitles-menu');
-                this.container = $(langTemplate);
+                this.container = $(HtmlUtils.ensureHtml(langHtml).toString());
                 this.captionControlEl = this.container.find('.toggle-captions');
                 this.captionDisplayEl = this.state.el.find('.closed-captions');
                 this.transcriptControlEl = this.container.find('.toggle-transcript');

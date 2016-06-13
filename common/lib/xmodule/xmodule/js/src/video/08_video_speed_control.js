@@ -1,9 +1,10 @@
 (function (requirejs, require, define) {
 "use strict";
 define(
-'video/08_video_speed_control.js',
-['video/00_iterator.js'],
-function (Iterator) {
+'video/08_video_speed_control.js', [
+    'video/00_iterator.js',
+    'edx-ui-toolkit/js/utils/html-utils'
+], function (Iterator, HtmlUtils) {
     /**
      * Video speed control module.
      * @exports video/08_video_speed_control.js
@@ -101,18 +102,30 @@ function (Iterator) {
             var speedsContainer = this.speedsContainer,
                 reversedSpeeds = speeds.concat().reverse(),
                 speedsList = $.map(reversedSpeeds, function (speed) {
-                    return [
-                        '<li data-speed="', speed, '">',
-                            '<button class="control speed-option" tabindex="-1" aria-pressed="false">',
-                                speed, 'x',
-                            '</button>',
-                        '</li>'
-                    ].join('');
+                    return HtmlUtils.interpolateHtml(
+                        HtmlUtils.joinHtml(
+                            HtmlUtils.HTML('<li data-speed="{speed}">'),
+                            HtmlUtils.HTML('<button class="control speed-option" tabindex="-1" aria-pressed="false">'),
+                            HtmlUtils.HTML(speed),
+                            HtmlUtils.HTML('x'),
+                            HtmlUtils.HTML('</button>'),
+                            HtmlUtils.HTML('</li>')
+                        ),
+                        {
+                            speed: speed
+                        }
+                    ).toString();
                 });
 
-            speedsContainer.html(speedsList.join(''));
+            HtmlUtils.setHtml(
+                speedsContainer,
+                HtmlUtils.HTML(speedsList)
+            );
             this.speedLinks = new Iterator(speedsContainer.find('.speed-option'));
-            this.state.el.find('.secondary-controls').prepend(this.el);
+            HtmlUtils.prepend(
+                this.state.el.find('.secondary-controls'),
+                HtmlUtils.HTML(this.el)
+            );
             this.setActiveSpeed(currentSpeed);
         },
 
